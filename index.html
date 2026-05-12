@@ -3,76 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日本九州之旅 - 行程助手</title>
-    <!-- Tailwind CSS -->
+    <title>九洲廣島之行 ｜ Travel App</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Vue.js 3 -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <!-- Lucide Icons (用於 App 圖示) -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- SortableJS (用於卡片拖曳) -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
-
     <style>
-        body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background-color: #F0F4F8; /* 延伸自海之鳥居的淺藍色系 */
-            -webkit-tap-highlight-color: transparent;
-        }
-        .japanese-blue { color: #2B5797; } /* 日本傳統色：紺青 */
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #F0F4F8; -webkit-tap-highlight-color: transparent; }
+        .japanese-blue { color: #2B5797; }
         .bg-japanese-blue { background-color: #2B5797; }
-        
-        /* 隱藏滾動條但保持功能 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* 頁首圓弧效果 */
-        .header-mask {
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-            overflow: hidden;
-        }
-
-        /* 主內容上移重疊 */
-        .main-content {
-            margin-top: -50px;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* 卡片設計 */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        /* 導航列樣式 */
-        .nav-btn.active {
-            color: #2B5797;
-            transform: translateY(-5px);
-        }
-
-        /* 日期選擇器動畫 */
-        .date-chip.active {
-            background-color: #2B5797;
-            color: white;
-            box-shadow: 0 4px 10px rgba(43, 87, 151, 0.3);
-        }
+        .header-mask { border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; overflow: hidden; background: #2B5797; }
+        .main-content { margin-top: -60px; position: relative; z-index: 10; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .nav-btn.active { color: #2B5797; transform: translateY(-5px); }
+        .date-chip.active { background-color: #2B5797; color: white; }
     </style>
 </head>
 <body class="pb-24">
-
 <div id="app">
-    <!-- 1. Header & Banner -->
-    <header class="header-mask h-[320px] relative bg-gray-200">
-        <!-- 這裡是你的 Banner 圖片 -->
-        <img src="YOUR_IMAGE_PATH_HERE" alt="Travel Banner" class="w-full h-[250px] object-cover">
-        
-        <!-- Tab 按鈕 (浮動於圖片右下方) -->
+    <!-- Header Banner -->
+    <header class="header-mask h-[300px] relative">
+        <img src="YOUR_IMAGE_NAME.jpg" alt="Banner" class="w-full h-[250px] object-cover opacity-90">
         <div class="absolute bottom-16 right-4 flex space-x-3">
             <button @click="currentTab = 'itinerary'" :class="{'active': currentTab === 'itinerary'}" class="nav-btn bg-white p-3 rounded-full shadow-lg transition-all text-gray-400">
                 <i data-lucide="map-pin"></i>
@@ -86,191 +39,193 @@
         </div>
     </header>
 
-    <!-- 2. Main Content -->
     <main class="main-content px-4">
-        
-        <!-- A. 每日行程頁面 -->
+        <!-- 每日行程頁面 -->
         <div v-if="currentTab === 'itinerary'">
-            <!-- 天氣資訊 -->
             <div class="glass-card p-4 mb-4 flex items-center justify-between">
                 <div>
-                    <div class="text-xs text-gray-500">今日天氣 - 廣島</div>
+                    <div class="text-xs text-gray-500">今日天氣預報</div>
                     <div class="text-xl font-bold japanese-blue">24°C / 體感 26°C</div>
                 </div>
                 <i data-lucide="cloud-sun" class="text-yellow-500 w-10 h-10"></i>
             </div>
 
-            <!-- 橫向日期選擇器 -->
+            <!-- 橫向日期選擇 -->
             <div class="flex space-x-4 overflow-x-auto no-scrollbar py-2 mb-4">
-                <div v-for="(day, index) in schedule" :key="index" 
-                     @click="selectedDayIndex = index"
-                     :class="['date-chip flex flex-col items-center justify-center min-w-[60px] h-[80px] rounded-2xl glass-card cursor-pointer transition-all', 
-                              selectedDayIndex === index ? 'active' : 'text-gray-500']">
-                    <span class="text-xs font-bold">{{ day.weekday }}</span>
+                <div v-for="(day, index) in schedule" :key="index" @click="selectedDayIndex = index"
+                     :class="['date-chip flex flex-col items-center justify-center min-w-[65px] h-[85px] rounded-2xl glass-card cursor-pointer transition-all', selectedDayIndex === index ? 'active' : 'text-gray-500']">
+                    <span class="text-xs font-bold uppercase">{{ day.weekday }}</span>
                     <span class="text-xl font-bold">{{ day.date }}</span>
                 </div>
             </div>
 
-            <!-- 行程清單 (可拖曳) -->
+            <!-- 行程清單 -->
             <div id="itinerary-list" class="space-y-4">
-                <div v-for="(item, idx) in currentDayItems" :key="item.id" class="relative">
-                    <!-- 交通時間間隔 -->
+                <div v-for="(item, idx) in currentDayItems" :key="item.id">
+                    <!-- 交通時間 -->
                     <div v-if="idx > 0" class="flex items-center ml-10 my-2 text-xs text-gray-400">
                         <div class="border-l-2 border-dashed border-gray-300 h-6 mr-4"></div>
-                        <i data-lucide="bus" class="w-3 h-3 mr-1"></i> 
-                        <span>{{ item.travelTime || '15 min' }}</span>
+                        <i :data-lucide="item.transportIcon || 'bus'" class="w-3 h-3 mr-1"></i> 
+                        <span>{{ item.travelTime || '15-30 min' }}</span>
                     </div>
 
-                    <!-- 行程卡片 -->
-                    <div class="glass-card p-4 flex gap-4 items-start" @click="openGoogleMaps(item.name)">
-                        <div class="bg-blue-50 p-2 rounded-lg text-japanese-blue">
+                    <!-- 航班特別樣式 -->
+                    <div v-if="item.type === '航班'" class="bg-japanese-blue text-white p-5 rounded-3xl shadow-lg flex justify-between items-center" @click="openGoogleMaps(item.name)">
+                        <div>
+                            <div class="text-xs opacity-80">{{ item.note }}</div>
+                            <div class="text-xl font-bold">{{ item.time }} {{ item.name }}</div>
+                        </div>
+                        <i data-lucide="plane-takeoff" class="w-8 h-8"></i>
+                    </div>
+
+                    <!-- 一般卡片 -->
+                    <div v-else class="glass-card p-4 flex gap-4 items-start active:scale-95 transition-transform" @click="openGoogleMaps(item.name)">
+                        <div class="bg-blue-50 p-2 rounded-xl text-japanese-blue">
                             <i :data-lucide="getIcon(item.type)"></i>
                         </div>
                         <div class="flex-1">
-                            <div class="flex justify-between">
+                            <div class="flex justify-between items-start">
                                 <h3 class="font-bold text-gray-800">{{ item.time }} {{ item.name }}</h3>
                                 <span class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">{{ item.type }}</span>
                             </div>
                             <p class="text-xs text-gray-500 mt-1" v-if="item.note">{{ item.note }}</p>
-                            <div class="flex mt-2 text-[10px] text-gray-400 space-x-3" v-if="item.type !== '航班'">
-                                <span v-if="item.openTime"><i data-lucide="clock" class="inline w-3 h-3"></i> {{ item.openTime }}</span>
-                                <span v-if="item.price"><i data-lucide="ticket" class="inline w-3 h-3"></i> {{ item.price }}</span>
+                            <div class="flex mt-2 text-[10px] text-gray-400 space-x-3">
+                                <span v-if="item.openTime"><i data-lucide="clock" class="inline w-3 h-3 mr-0.5"></i>{{ item.openTime }}</span>
+                                <span v-if="item.price"><i data-lucide="ticket" class="inline w-3 h-3 mr-0.5"></i>{{ item.price }}</span>
                             </div>
                         </div>
-                        <i data-lucide="chevron-right" class="text-gray-300 mt-1"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- B. 資訊頁面 -->
+        <!-- 資訊頁面 -->
         <div v-if="currentTab === 'info'" class="space-y-4">
-            <!-- 匯率換算 -->
             <div class="glass-card p-6">
-                <h3 class="font-bold japanese-blue mb-4 flex items-center">
-                    <i data-lucide="refresh-cw" class="mr-2 w-5 h-5"></i> 匯率換算 (當前約 0.21)
-                </h3>
+                <h3 class="font-bold japanese-blue mb-4 flex items-center"><i data-lucide="refresh-cw" class="mr-2 w-5 h-5"></i> 匯率換算 (0.21)</h3>
                 <div class="flex items-center space-x-4">
-                    <input v-model="jpyInput" type="number" placeholder="日幣 JPY" class="w-1/2 p-3 bg-gray-50 rounded-xl outline-none border-2 border-transparent focus:border-blue-200">
-                    <i data-lucide="arrow-right" class="text-gray-400"></i>
-                    <div class="w-1/2 p-3 bg-gray-100 rounded-xl font-bold text-gray-700">
-                        NT$ {{ (jpyInput * 0.21).toFixed(0) }}
-                    </div>
+                    <input v-model="jpyInput" type="number" placeholder="JPY 日幣" class="w-1/2 p-3 bg-gray-50 rounded-xl border-none outline-none">
+                    <i data-lucide="arrow-right" class="text-gray-300"></i>
+                    <div class="w-1/2 p-3 bg-gray-100 rounded-xl font-bold">NT$ {{ (jpyInput * 0.21).toFixed(0) }}</div>
                 </div>
             </div>
-
-            <!-- 住宿/航班摘要... (此處簡化，結構同上) -->
-            <div class="glass-card p-4">
-                <h3 class="font-bold mb-2">住宿資訊</h3>
-                <div v-for="h in hotels" class="text-sm border-b border-gray-100 py-2 last:border-0">
-                    <p class="font-medium">{{ h.name }}</p>
-                    <p class="text-xs text-gray-400">{{ h.address }}</p>
+            <div class="glass-card p-5">
+                <h3 class="font-bold mb-3">住宿清單</h3>
+                <div v-for="h in hotels" class="text-sm py-2 border-b border-gray-50 last:border-0" @click="openGoogleMaps(h.name)">
+                    <div class="font-bold text-gray-700">{{ h.date }}</div>
+                    <div class="japanese-blue">{{ h.name }}</div>
                 </div>
+            </div>
+            <div class="glass-card p-5 bg-red-50">
+                <h3 class="font-bold text-red-800 mb-2">緊急聯繫</h3>
+                <p class="text-sm">警察：110 / 急救：119</p>
             </div>
         </div>
 
-        <!-- C. 花費頁面 -->
+        <!-- 花費頁面 -->
         <div v-if="currentTab === 'expense'">
             <div class="glass-card p-6 mb-4 text-center bg-japanese-blue text-white">
-                <div class="text-sm opacity-80">總花費累計 (JPY)</div>
+                <div class="text-sm opacity-80">預算累計 (JPY)</div>
                 <div class="text-3xl font-bold">¥ {{ totalExpense }}</div>
             </div>
-            
             <div class="space-y-3">
                 <div v-for="exp in expenses" class="glass-card p-4 flex justify-between items-center">
                     <div>
                         <div class="font-bold">{{ exp.name }}</div>
-                        <div class="text-[10px] text-gray-400">{{ exp.date }} | {{ exp.category }}</div>
+                        <div class="text-[10px] text-gray-400">{{ exp.category }} | {{ exp.payment }}</div>
                     </div>
-                    <div class="text-right">
-                        <div class="font-bold japanese-blue">¥ {{ exp.amount }}</div>
-                        <div class="text-[10px] text-gray-500">{{ exp.payment }}</div>
-                    </div>
+                    <div class="font-bold japanese-blue">¥ {{ exp.amount }}</div>
                 </div>
             </div>
         </div>
-
     </main>
 
-    <!-- 浮動新增按鈕 -->
-    <button v-if="currentTab !== 'info'" @click="showAddModal = true" class="fixed bottom-6 right-6 w-14 h-14 bg-japanese-blue text-white rounded-full shadow-2xl flex items-center justify-center transition-transform active:scale-90">
+    <button v-if="currentTab !== 'info'" class="fixed bottom-6 right-6 w-14 h-14 bg-japanese-blue text-white rounded-full shadow-2xl flex items-center justify-center">
         <i data-lucide="plus"></i>
     </button>
 </div>
 
 <script>
-const { createApp, ref, computed, onMounted, nextTick } = Vue;
-
+const { createApp, ref, computed, onMounted } = Vue;
 createApp({
     setup() {
         const currentTab = ref('itinerary');
         const selectedDayIndex = ref(0);
         const jpyInput = ref(null);
-        const showAddModal = ref(false);
 
-        // 模擬資料 (根據你的行程輸入)
         const schedule = ref([
-            {
-                date: "24", weekday: "Thu",
-                items: [
-                    { id: 1, time: "07:10", name: "桃園機場-廣島機場", type: "航班", note: "中華航空 CI112" },
-                    { id: 2, time: "12:30", name: "とんかつ16", type: "美食", openTime: "11:30-14:00", note: "需IG預約" },
-                    { id: 3, time: "14:00", name: "廣島美術館", type: "景點", price: "¥1500", openTime: "09:00-17:00" },
-                    { id: 4, time: "18:30", name: "長田屋 お好み焼き", type: "美食", note: "廣島燒名店" }
-                ]
-            },
-            {
-                date: "25", weekday: "Fri",
-                items: [
-                    { id: 5, time: "10:00", name: "嚴島神社", type: "景點", note: "海上鳥居" },
-                    { id: 6, time: "15:00", name: "下瀨美術館", type: "景點", note: "坂茂設計" }
-                ]
-            }
-            // ... 後續日期可自行擴充
+            { date: "24", weekday: "Thu", items: [
+                { id: 1, time: "07:10", name: "桃園-廣島", type: "航班", note: "中華航空 CI112" },
+                { id: 2, time: "11:20", name: "廣島機場交通車", type: "交通", travelTime: "45 min" },
+                { id: 3, time: "12:30", name: "とんかつ16", type: "美食", note: "IG預約", openTime: "11:30-14:00" },
+                { id: 4, time: "14:00", name: "廣島美術館", type: "景點", openTime: "09:00-17:00" },
+                { id: 5, time: "16:00", name: "原爆圓頂", type: "景點", note: "和平紀念資料館" },
+                { id: 6, time: "18:30", name: "長田屋お好み焼き", type: "美食", note: "本通商店街" },
+                { id: 7, time: "21:00", name: "串焼処 かない屋", type: "美食", note: "宵夜" }
+            ]},
+            { date: "25", weekday: "Fri", items: [
+                { id: 8, time: "09:00", name: "前往嚴島", type: "交通" },
+                { id: 9, time: "10:00", name: "嚴島神社", type: "景點", note: "海上鳥居" },
+                { id: 10, time: "12:00", name: "宮島午餐", type: "美食" },
+                { id: 11, time: "15:00", name: "下瀨美術館", type: "景點", note: "坂茂設計" },
+                { id: 12, time: "18:25", name: "太閤烏龍麵", type: "美食" },
+                { id: 13, time: "19:24", name: "新幹線往福岡", type: "交通", note: "19:24-20:30" }
+            ]},
+            { date: "26", weekday: "Sat", items: [
+                { id: 14, time: "08:40", name: "Pain Stock Tenjin", type: "美食" },
+                { id: 15, time: "09:50", name: "櫛田神社", type: "景點" },
+                { id: 16, time: "11:00", name: "極味屋博多店", type: "美食" },
+                { id: 17, time: "13:30", name: "太宰府天滿宮", type: "景點", note: "梅枝餅" },
+                { id: 18, time: "16:10", name: "藥院雜貨巡禮", type: "購物", note: "BBB Potters等" },
+                { id: 19, time: "18:00", name: "水炊雞", type: "美食" },
+                { id: 20, time: "21:00", name: "Nikuichi博多店", type: "美食", note: "宵夜燒肉" }
+            ]},
+            { date: "27", weekday: "Sun", items: [
+                { id: 21, time: "09:30", name: "福岡市美術館", type: "景點" },
+                { id: 22, time: "12:15", name: "西新初喜本店", type: "美食" },
+                { id: 23, time: "14:00", name: "Siro coffee", type: "美食" },
+                { id: 24, time: "16:00", name: "天神百貨/i'm donut?", type: "購物" },
+                { id: 25, time: "18:00", name: "麵屋兼虎", type: "美食" },
+                { id: 26, time: "20:00", name: "新幹線往熊本", type: "交通" }
+            ]},
+            { date: "28", weekday: "Mon", items: [
+                { id: 27, time: "08:00", name: "阿蘇/高千穗一日遊", type: "景點", note: "Klook行程" },
+                { id: 28, time: "18:00", name: "みのる食堂", type: "美食" },
+                { id: 29, time: "19:30", name: "OMO5熊本", type: "住宿" }
+            ]},
+            { date: "29", weekday: "Tue", items: [
+                { id: 30, time: "09:00", name: "熊本城", type: "景點" },
+                { id: 31, time: "11:30", name: "勝烈亭 新市街本店", type: "美食" },
+                { id: 32, time: "13:10", name: "熊本美術館", type: "景點" },
+                { id: 33, time: "14:30", name: "上下通伴手禮", type: "購物" },
+                { id: 34, time: "16:03", name: "前往熊本機場", type: "交通" },
+                { id: 35, time: "18:40", name: "熊本-桃園", type: "航班" }
+            ]}
         ]);
 
         const hotels = [
-            { name: "HOTEL GRANVIA HIROSHIMA", address: "廣島市南區松原町1-5" },
-            { name: "福岡東急博多卓越飯店", address: "福岡市博多區中洲4-6-7" }
+            { date: "9/24", name: "Hotel Granvia Hiroshima" },
+            { date: "9/25-26", name: "福岡東急博多卓越飯店" },
+            { date: "9/27", name: "Via Inn Prime 熊本" },
+            { date: "9/28", name: "OMO5 熊本" }
         ];
 
         const expenses = ref([
-            { name: "午餐-炸豬排", amount: 2500, category: "飲食", date: "09/24", payment: "現金" },
-            { name: "JR Pass", amount: 20000, category: "交通", date: "09/24", payment: "信用卡" }
+            { name: "阿蘇一日遊", amount: 10000, category: "門票", payment: "信用卡" },
+            { name: "勝烈亭", amount: 3500, category: "美食", payment: "現金" }
         ]);
 
         const currentDayItems = computed(() => schedule.value[selectedDayIndex.value]?.items || []);
-        const totalExpense = computed(() => expenses.value.reduce((sum, item) => sum + item.amount, 0));
+        const totalExpense = computed(() => expenses.value.reduce((sum, i) => sum + i.amount, 0));
+        const getIcon = (t) => ({ '美食': 'utensils', '景點': 'camera', '交通': 'car', '購物': 'shopping-bag', '住宿': 'home' }[t] || 'map-pin');
+        const openGoogleMaps = (n) => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(n)}`, '_blank');
 
-        const getIcon = (type) => {
-            switch(type) {
-                case '航班': return 'plane';
-                case '美食': return 'utensils';
-                case '景點': return 'camera';
-                case '住宿': return 'home';
-                default: return 'map-pin';
-            }
-        };
-
-        const openGoogleMaps = (name) => {
-            const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
-            window.open(url, '_blank');
-        };
-
-        onMounted(() => {
+        onMounted(() => { 
             lucide.createIcons();
-            // 初始化拖曳功能
-            const el = document.getElementById('itinerary-list');
-            if(el) {
-                new Sortable(el, { animation: 150 });
-            }
+            new Sortable(document.getElementById('itinerary-list'), { animation: 150 });
         });
 
-        return {
-            currentTab, selectedDayIndex, schedule, hotels, expenses, 
-            currentDayItems, totalExpense, jpyInput, getIcon, openGoogleMaps,
-            showAddModal
-        };
+        return { currentTab, selectedDayIndex, schedule, hotels, expenses, currentDayItems, totalExpense, jpyInput, getIcon, openGoogleMaps };
     }
 }).mount('#app');
 </script>
